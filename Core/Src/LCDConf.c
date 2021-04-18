@@ -197,6 +197,9 @@ int LCD_X_DisplayDriver(unsigned LayerIndex, unsigned Cmd, void * pData)
     // to be adapted by the customer...
     //
     // ...
+	  __HAL_SPI_ENABLE(DISP_SPI_PTR);
+	     DISP_CS_UNSELECT;
+	     ILI9341_Init();
     _InitController();
     r = 0;
     break;

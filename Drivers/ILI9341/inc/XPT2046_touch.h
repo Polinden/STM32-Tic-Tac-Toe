@@ -1,10 +1,3 @@
-/*
- * XPT2046_touch.h
- *
- *  Created on: 20 sep. 2019 �.
- *      Author: Andriy Honcharenko
- */
-
 #ifndef XPT2046_TOUCH_H_
 #define XPT2046_TOUCH_H_
 
@@ -27,10 +20,10 @@ extern SPI_HandleTypeDef XPT2046_SPI_PORT;
 #define XPT2046_SCALE_Y 320
 
 // to calibrate uncomment UART_Printf line in ili9341_touch.c
-#define XPT2046_MIN_RAW_X 3400
-#define XPT2046_MAX_RAW_X 29000
-#define XPT2046_MIN_RAW_Y 3300
-#define XPT2046_MAX_RAW_Y 30000
+#define XPT2046_MIN_RAW_X 2900
+#define XPT2046_MAX_RAW_X 31000
+#define XPT2046_MIN_RAW_Y 3000
+#define XPT2046_MAX_RAW_Y 31000
 
 // call before initializing any SPI devices
 bool XPT2046_TouchPressed();

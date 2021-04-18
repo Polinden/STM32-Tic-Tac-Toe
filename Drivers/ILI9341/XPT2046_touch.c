@@ -5,6 +5,7 @@
 #define READ_X 0xD0
 #define READ_Y 0x90
 
+
 static void XPT2046_TouchSelect()
 {
     HAL_GPIO_WritePin(XPT2046_CS_GPIO_Port, XPT2046_CS_Pin, GPIO_PIN_RESET);
@@ -63,9 +64,6 @@ bool XPT2046_TouchGetCoordinates(uint16_t* x, uint16_t* y)
     uint32_t raw_y = (avg_y / 16);
     if(raw_y < XPT2046_MIN_RAW_Y) raw_y = XPT2046_MIN_RAW_Y;
     if(raw_y > XPT2046_MAX_RAW_Y) raw_y = XPT2046_MAX_RAW_Y;
-
-    // Uncomment this line to calibrate touchscreen:
-    //printf("raw_x = %d, raw_y = %d\r\n", (int) raw_x, (int) raw_y);
 
     *x = (raw_x - XPT2046_MIN_RAW_X) * XPT2046_SCALE_X / (XPT2046_MAX_RAW_X - XPT2046_MIN_RAW_X);
     *y = (raw_y - XPT2046_MIN_RAW_Y) * XPT2046_SCALE_Y / (XPT2046_MAX_RAW_Y - XPT2046_MIN_RAW_Y);

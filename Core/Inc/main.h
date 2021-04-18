@@ -68,7 +68,6 @@ void Error_Handler(void);
 #define TFT_DC_GPIO_Port GPIOB
 #define T_IRQ_Pin GPIO_PIN_10
 #define T_IRQ_GPIO_Port GPIOA
-#define T_IRQ_EXTI_IRQn EXTI15_10_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

@@ -19,12 +19,12 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "main.h"
 #include "ILI9341_GFX.h"
 #include "fonts.h"
 #include "XPT2046_touch.h"
 #include "GUI.h"
 #include "DIALOG.h"
-
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -42,15 +42,21 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi3;
+TIM_HandleTypeDef htim1;
 
 /* USER CODE BEGIN PV */
-
+static void _cbCallback(WM_MESSAGE * pMsg) {
+switch (pMsg->MsgId) {
+default:WM_DefaultProc(pMsg);}}
+GUI_PID_STATE pState, p1State;
+int xzz=0;
+int dx,dy, ds;
+ds=1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,22 +64,20 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_SPI3_Init(void);
+static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-//DIALOG EXAMPLE
-static void _cbCallback(WM_MESSAGE * pMsg) {  switch (pMsg->MsgId) {    default:      WM_DefaultProc(pMsg);  }}
-int ipp=10;
-GUI_PID_STATE State;
 /* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
   * @retval int
   */
+
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -100,26 +104,103 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_SPI3_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_TIM_Base_Start_IT(&htim1);
   /* USER CODE END 2 */
   __HAL_SPI_ENABLE(DISP_SPI_PTR);
     DISP_CS_UNSELECT;
     ILI9341_Init();
-    //DIALOG EXAMPLE
       GUI_Init();
-      GUI_SetBkColor(GUI_GRAY);
+      GUI_SetBkColor(GUI_GREEN);
+      GUI_SetColor(GUI_BLACK);
       GUI_Clear();
-      static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {  { FRAMEWIN_CreateIndirect, "Dialog", 0, 10,  10, 180, 230, FRAMEWIN_CF_MOVEABLE, 0 },  { BUTTON_CreateIndirect,   "OK",     GUI_ID_OK,     100,  5,   60,  20 },  { BUTTON_CreateIndirect,   "Cancel", GUI_ID_CANCEL, 100,  30,  60,  20 },  { TEXT_CreateIndirect,     "LText",  0,              10,  55,  48,  15, TEXT_CF_LEFT },  { TEXT_CreateIndirect,     "RText",  0,              10,  80,  48,  15, TEXT_CF_RIGHT },  { EDIT_CreateIndirect,     NULL,     GUI_ID_EDIT0,   60,  55, 100,  15, 0, 50 },  { EDIT_CreateIndirect,     NULL,     GUI_ID_EDIT1,   60,  80, 100,  15, 0, 50 },  { TEXT_CreateIndirect,     "Hex",    0,              10, 100,  48,  15, TEXT_CF_RIGHT },  { EDIT_CreateIndirect,     NULL,     GUI_ID_EDIT2,   60, 100, 100,  15, 0, 6 },  { TEXT_CreateIndirect,     "Bin",    0,              10, 120,  48,  15, TEXT_CF_RIGHT },  { EDIT_CreateIndirect,     NULL,     GUI_ID_EDIT3,   60, 120, 100,  15 },  { LISTBOX_CreateIndirect,  NULL,     GUI_ID_LISTBOX0,10,  10,  48,  40 },  { CHECKBOX_CreateIndirect, NULL,     GUI_ID_CHECK0,  10, 140,   0,   0 },  { CHECKBOX_CreateIndirect, NULL,     GUI_ID_CHECK1,  30, 140,   0,   0 },  { SLIDER_CreateIndirect,   NULL,     GUI_ID_SLIDER0, 60, 140, 100,  20 },  { SLIDER_CreateIndirect,   NULL,     GUI_ID_SLIDER1, 10, 170, 150,  30 }};
-      GUI_ExecDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), &_cbCallback, 0, 0, 0);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   /* Infinite loop */
+      //DIALOG EXAMPLE
+      static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
+      { FRAMEWIN_CreateIndirect, "Dialog", 0,
+      10, 10, 180, 230, 0,
+      0 },
+      { BUTTON_CreateIndirect,
+      "OK",
+      GUI_ID_OK,
+      100,
+      5, 60, 20, 0,
+      0 },
+      { BUTTON_CreateIndirect,
+      "Cancel", GUI_ID_CANCEL,
+      100, 30, 60, 20, 0,
+      0 },
+      { TEXT_CreateIndirect,
+      "LText", 0,
+      10, 55, 48, 15, TEXT_CF_LEFT,
+      0 },
+      { TEXT_CreateIndirect,
+      "RText", 0,
+      10, 80, 48, 15, TEXT_CF_RIGHT, 0 },
+      { EDIT_CreateIndirect,
+      NULL,
+      GUI_ID_EDIT0,
+      60, 55, 100, 15, 0,
+      50 },
+      { EDIT_CreateIndirect,
+      NULL,
+      GUI_ID_EDIT1,
+      60, 80, 100, 15, 0,
+      50 },
+      { TEXT_CreateIndirect,
+      "Hex",
+      0,
+      10, 100, 48, 15, TEXT_CF_RIGHT, 0 },
+      { EDIT_CreateIndirect,
+      NULL,
+      GUI_ID_EDIT2,
+      60, 100, 100, 15, 0,
+      6 },
+      { TEXT_CreateIndirect,
+      "Bin",
+      0,
+      10, 120, 48, 15, TEXT_CF_RIGHT, 0 },
+      { EDIT_CreateIndirect,
+      NULL,
+      GUI_ID_EDIT3,
+      60, 120, 100, 15, 0,
+      0 },
+      { LISTBOX_CreateIndirect, NULL,
+      GUI_ID_LISTBOX0, 10, 10, 48, 40, 0,
+      0 },
+      { CHECKBOX_CreateIndirect, NULL,
+      GUI_ID_CHECK0,
+      10, 140,
+      0,
+      0, 0,
+      0 },
+      { CHECKBOX_CreateIndirect, NULL,
+      GUI_ID_CHECK1,
+      30, 140,
+      0,
+      0, 0,
+      0 },
+      { SLIDER_CreateIndirect,
+      NULL,
+      GUI_ID_SLIDER0,
+      60, 140, 100, 20, 0,
+      0 },
+      { SLIDER_CreateIndirect,
+      NULL,
+      GUI_ID_SLIDER1,
+      10, 170, 150, 30, 0,
+      0 }
+      };
+
+      GUI_ExecDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate),_cbCallback, 0, 0, 0);
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-    GUI_Exec();
+	  GUI_Exec();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -245,6 +326,52 @@ static void MX_SPI3_Init(void)
 }
 
 /**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 3000;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 7200;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -277,34 +404,36 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : T_IRQ_Pin */
   GPIO_InitStruct.Pin = T_IRQ_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(T_IRQ_GPIO_Port, &GPIO_InitStruct);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 1, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin)
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
- if (GPIO_Pin == T_IRQ_Pin)
+ if(htim->Instance == TIM1)
  {
-  HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
-  if(XPT2046_TouchPressed())
-  {
+  HAL_TIM_Base_Stop_IT(&htim1);
+  if(XPT2046_TouchPressed()) {
    uint16_t x = 0, y = 0;
    if(XPT2046_TouchGetCoordinates(&x, &y))
    {
-	   State.x = x;State.y = y;
-	   State.Pressed = 1;
-	   GUI_TOUCH_StoreStateEx(&State);
+	   dx=x; dy=y; ds=1;
+	   x=240-x; y=320-y;
+	   pState.x = y; pState.y = x;
+	   pState.Pressed = 1;
+	   GUI_TOUCH_StoreStateEx(&pState);
    }
-  }
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
- }
+   } else
+	     if (ds!=0){
+	     pState.Pressed=0;
+	     GUI_TOUCH_StoreStateEx(&pState);
+	     ds=0;
+	     }
+   }
+  HAL_TIM_Base_Start_IT(&htim1);
 }
 
 

@@ -195,6 +195,21 @@ int main(void)
       0 }
       };
 
+
+      WM_HWIN hMessage;
+      WM_HWIN hMessageMove;
+      // Enable multi-buffering to avoid flickering during movement of a framewin.
+      //
+      //WM_MULTIBUF_Enable(1);
+      //
+      // Create messagebox
+      //
+      //hMessage = GUI_MessageBox("Sample message", "Sample title", 0);
+      //
+      // Create movable messagebox
+      //
+      //hMessageMove = GUI_MessageBox("This message is movable!", "Movable Messagebox", GUI_MESSAGEBOX_CF_MOVEABLE);
+
       GUI_ExecDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate),_cbCallback, 0, 0, 0);
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -344,7 +359,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 3000;
+  htim1.Init.Prescaler = 1000;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 7200;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;

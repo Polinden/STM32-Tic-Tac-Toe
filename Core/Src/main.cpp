@@ -27,7 +27,7 @@
 #include "XPT2046_touch.h"
 #include "GUI.h"
 #include "DIALOG.h"
-#include "dialog.h"
+#include "TTT.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,15 +94,19 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
   GUI_Init();
-  WM_SetCallback(WM_HBKWIN, &_cbBkWindow);
+  WM_SetCallback(WM_HBKWIN, &_zbBkWindow);
   WM_SetCreateFlags(WM_CF_MEMDEV);
   /* USER CODE END 2 */
   /* Infinite loop */
   while (1)
   {
     /* USER CODE END WHILE */
-	  GUI_ExecDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), &_cbCallback, 0, 0, 0);
-	  GUI_Delay(300);
+	  GUI_Delay(500);
+	  WM_HWIN hTTTwin1=CreateOptionWindow();
+	  GUI_ExecCreatedDialog(hTTTwin1);
+	  GUI_Delay(500);
+	  WM_HWIN hTTTwin2=CreatePlayWindow();
+	  GUI_ExecCreatedDialog(hTTTwin2);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
